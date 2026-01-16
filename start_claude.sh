@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -e
 #!/bin/bash
+
+# 设置环境变量（需手动填写）
+export ANTHROPIC_AUTH_TOKEN=
+export ANTHROPIC_BASE_URL=
+
 first_run=false
 # 检查claude是否已安装
 if ! command -v claude &> /dev/null; then
@@ -15,10 +20,6 @@ if ! command -v claude &> /dev/null; then
 else
     echo "Claude已安装"
 fi
-
-# 设置环境变量（需手动填写）
-export ANTHROPIC_AUTH_TOKEN=
-export ANTHROPIC_BASE_URL=
 
 # 启动claude
 echo "启动Claude..."
