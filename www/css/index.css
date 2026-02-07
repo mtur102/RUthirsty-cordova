@@ -217,13 +217,52 @@ body {
     background: #ee3344;
 }
 
+/* 统计面板 */
+.stats-panel {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 12px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: 12px;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #667eea;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #666;
+    font-weight: 500;
+}
+
 /* 历史记录按钮 */
 .history-section {
     text-align: center;
     margin-bottom: 20px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
 }
 
-.history-btn {
+.history-btn,
+.export-btn {
     background: white;
     color: #667eea;
     border: 2px solid #667eea;
@@ -233,11 +272,24 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    flex: 1;
+    max-width: 200px;
 }
 
-.history-btn:active {
+.history-btn:active,
+.export-btn:active {
     transform: scale(0.95);
     background: #667eea;
+    color: white;
+}
+
+.export-btn {
+    color: #10b981;
+    border-color: #10b981;
+}
+
+.export-btn:active {
+    background: #10b981;
     color: white;
 }
 
@@ -476,4 +528,149 @@ body {
 .history-list::-webkit-scrollbar-thumb:hover,
 .modal-body::-webkit-scrollbar-thumb:hover {
     background: #999;
+}
+
+/* 祝贺消息 */
+.congrats-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2000;
+    animation: congratsAppear 0.5s ease;
+}
+
+.congrats-content {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    text-align: center;
+    min-width: 280px;
+}
+
+.congrats-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+    animation: congratsIconBounce 0.6s ease;
+}
+
+.congrats-text {
+    font-size: 24px;
+    font-weight: 600;
+    color: #667eea;
+    margin-bottom: 8px;
+}
+
+.congrats-subtext {
+    font-size: 16px;
+    color: #666;
+}
+
+.congrats-message.fade-out {
+    animation: congratsFadeOut 0.3s ease forwards;
+}
+
+@keyframes congratsAppear {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes congratsIconBounce {
+    0%, 100% {
+        transform: scale(1);
+    }
+    25% {
+        transform: scale(1.2);
+    }
+    50% {
+        transform: scale(0.9);
+    }
+    75% {
+        transform: scale(1.1);
+    }
+}
+
+@keyframes congratsFadeOut {
+    to {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+}
+
+/* Toast提示消息 */
+.toast-message {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(16, 185, 129, 0.95);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    z-index: 2000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    animation: toastSlideUp 0.3s ease;
+}
+
+.toast-message.fade-out {
+    animation: toastFadeOut 0.3s ease forwards;
+}
+
+@keyframes toastSlideUp {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+@keyframes toastFadeOut {
+    to {
+        opacity: 0;
+        transform: translateX(-50%) translateY(10px);
+    }
+}
+
+/* 响应式设计 - 小屏幕优化 */
+@media screen and (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .stat-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
+    }
+
+    .stat-value {
+        font-size: 24px;
+    }
+
+    .stat-label {
+        font-size: 14px;
+    }
+
+    .history-section {
+        flex-direction: column;
+    }
+
+    .history-btn,
+    .export-btn {
+        max-width: 100%;
+    }
 }

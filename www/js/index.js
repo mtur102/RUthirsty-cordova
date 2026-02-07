@@ -49,6 +49,9 @@ function bindEvents() {
     document.getElementById('closeHistory').addEventListener('click', closeHistoryModal);
     document.getElementById('closeHistoryBtn').addEventListener('click', closeHistoryModal);
 
+    // 导出数据按钮
+    document.getElementById('exportBtn').addEventListener('click', exportData);
+
     // 点击模态框背景关闭
     document.getElementById('settingsModal').addEventListener('click', function(e) {
         if (e.target === this) {
@@ -118,7 +121,7 @@ function getRecordsByDate(dateString) {
 function addRecord() {
     const now = new Date();
     const record = {
-        id: now.getTime() + '_' + Math.random().toString(36).substr(2, 9),
+        id: now.getTime() + '_' + Math.random().toString(36).substring(2, 11),
         timestamp: now.getTime(),
         date: getTodayDateString()
     };
@@ -134,6 +137,45 @@ function addRecord() {
     }, 300);
 
     updateUI();
+
+    // 检查是否完成目标
+    checkGoalCompletion();
+}
+
+// 检查目标完成情况
+function checkGoalCompletion() {
+    const todayRecords = getTodayRecords();
+    const count = todayRecords.length;
+    const goal = appData.settings.dailyGoal;
+
+    // 如果刚好达到目标，显示祝贺消息
+    if (count === goal) {
+        showCongratulations();
+    }
+}
+
+// 显示祝贺消息
+function showCongratulations() {
+    // 创建祝贺提示元素
+    const congratsDiv = document.createElement('div');
+    congratsDiv.className = 'congrats-message';
+    congratsDiv.innerHTML = `
+        <div class="congrats-content">
+            <div class="congrats-icon">🎉</div>
+            <div class="congrats-text">恭喜！今日目标已完成！</div>
+            <div class="congrats-subtext">继续保持良好习惯</div>
+        </div>
+    `;
+
+    document.body.appendChild(congratsDiv);
+
+    // 3秒后自动消失
+    setTimeout(() => {
+        congratsDiv.classList.add('fade-out');
+        setTimeout(() => {
+            document.body.removeChild(congratsDiv);
+        }, 300);
+    }, 3000);
 }
 
 // 删除记录
@@ -155,6 +197,7 @@ function deleteRecord(recordId) {
 function updateUI() {
     updateStats();
     renderTodayRecords();
+    updateOverallStats();
 }
 
 // 更新统计信息
@@ -312,6 +355,112 @@ function renderHistoryList() {
     });
 
     historyList.innerHTML = html;
+}
+
+// 更新总体统计信息
+function updateOverallStats() {
+    // 总打卡次数
+    const totalRecords = appData.records.length;
+    document.getElementById('totalRecords').textContent = totalRecords;
+
+    // 获取所有打卡日期（去重）
+    const uniqueDates = [...new Set(appData.records.map(record => record.date))].sort();
+    const totalDays = uniqueDates.length;
+    document.getElementById('totalDays').textContent = totalDays;
+
+    // 计算连续打卡天数
+    const consecutiveDays = calculateConsecutiveDays(uniqueDates);
+    document.getElementById('consecutiveDays').textContent = consecutiveDays;
+}
+
+// 计算连续打卡天数
+function calculateConsecutiveDays(sortedDates) {
+    if (sortedDates.length === 0) return 0;
+
+    const today = getTodayDateString();
+    let consecutive = 0;
+    let currentDate = new Date(today);
+
+    // 从今天开始往前检查
+    for (let i = 0; i < 365; i++) {
+        const dateString = currentDate.toLocaleDateString('zh-CN', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        }).replace(/\//g, '-');
+
+        if (sortedDates.includes(dateString)) {
+            consecutive++;
+            // 往前推一天
+            currentDate.setDate(currentDate.getDate() - 1);
+        } else {
+            // 如果是今天没有打卡，继续检查昨天
+            if (i === 0 && dateString === today) {
+                currentDate.setDate(currentDate.getDate() - 1);
+                continue;
+            }
+            break;
+        }
+    }
+
+    return consecutive;
+}
+
+// 导出数据功能
+function exportData() {
+    if (appData.records.length === 0) {
+        alert('暂无数据可导出');
+        return;
+    }
+
+    // 生成CSV格式数据
+    let csvContent = '日期,时间,时间戳\n';
+
+    // 按日期排序
+    const sortedRecords = [...appData.records].sort((a, b) => a.timestamp - b.timestamp);
+
+    sortedRecords.forEach(record => {
+        const date = record.date;
+        const time = new Date(record.timestamp).toLocaleTimeString('zh-CN', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+        csvContent += `${date},${time},${record.timestamp}\n`;
+    });
+
+    // 创建Blob并下载
+    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+
+    const filename = `RUthirsty_喝水记录_${getTodayDateString()}.csv`;
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // 显示成功提示
+    showExportSuccess();
+}
+
+// 显示导出成功提示
+function showExportSuccess() {
+    const toast = document.createElement('div');
+    toast.className = 'toast-message';
+    toast.textContent = '✓ 数据导出成功';
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('fade-out');
+        setTimeout(() => {
+            document.body.removeChild(toast);
+        }, 300);
+    }, 2000);
 }
 
 // 将deleteRecord函数暴露到全局作用域，以便HTML onclick可以调用
