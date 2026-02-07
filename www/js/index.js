@@ -31,6 +31,8 @@ function initApp() {
     loadData();
     bindEvents();
     updateUI();
+    showDailyTip();
+    checkBackupReminder();
 }
 
 // 绑定事件
@@ -60,6 +62,11 @@ function bindEvents() {
     // 清空所有数据按钮
     document.getElementById('clearAllData').addEventListener('click', clearAllData);
 
+    // 帮助按钮
+    document.getElementById('helpBtn').addEventListener('click', openHelpModal);
+    document.getElementById('closeHelp').addEventListener('click', closeHelpModal);
+    document.getElementById('closeHelpBtn').addEventListener('click', closeHelpModal);
+
     // 点击模态框背景关闭
     document.getElementById('settingsModal').addEventListener('click', function(e) {
         if (e.target === this) {
@@ -70,6 +77,27 @@ function bindEvents() {
     document.getElementById('historyModal').addEventListener('click', function(e) {
         if (e.target === this) {
             closeHistoryModal();
+        }
+    });
+
+    document.getElementById('helpModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeHelpModal();
+        }
+    });
+
+    // 键盘快捷键
+    document.addEventListener('keydown', function(e) {
+        // 空格键快速打卡（仅当没有模态框打开时）
+        if (e.code === 'Space' && !document.querySelector('.modal.show')) {
+            e.preventDefault();
+            addRecord();
+        }
+        // ESC键关闭模态框
+        if (e.code === 'Escape') {
+            closeSettingsModal();
+            closeHistoryModal();
+            closeHelpModal();
         }
     });
 }
@@ -490,6 +518,9 @@ function exportData() {
     link.click();
     document.body.removeChild(link);
 
+    // 记录导出时间
+    localStorage.setItem('ruthirsty_last_backup', Date.now().toString());
+
     // 显示成功提示
     showExportSuccess();
 }
@@ -550,6 +581,67 @@ function showToast(message, type = 'success') {
             document.body.removeChild(toast);
         }, 300);
     }, 2000);
+}
+
+// 显示每日提示语
+function showDailyTip() {
+    const tips = [
+        '💧 每天8杯水，健康好身体',
+        '🌟 坚持喝水，皮肤更水润',
+        '💪 充足水分，提升工作效率',
+        '🎯 养成好习惯，从喝水开始',
+        '☀️ 早起一杯水，唤醒新一天',
+        '🏃 运动后记得补充水分',
+        '📚 学习时多喝水，大脑更清醒',
+        '🌈 每一滴水都是对自己的关爱',
+        '⏰ 定时喝水，身体更健康',
+        '🎉 今天也要好好喝水哦',
+        '💝 爱自己，从喝水开始',
+        '🌸 水是生命之源，别忘了喝水',
+        '🔥 保持水分，代谢更顺畅',
+        '🌙 睡前一小时，记得喝点水',
+        '🎨 喝水让思维更活跃'
+    ];
+
+    // 根据日期选择提示语（每天不同）
+    const today = new Date();
+    const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
+    const tipIndex = dayOfYear % tips.length;
+
+    document.getElementById('dailyTip').textContent = tips[tipIndex];
+}
+
+// 检查备份提醒
+function checkBackupReminder() {
+    // 如果记录超过100条，且最近30天没有导出过，提醒用户备份
+    const totalRecords = appData.records.length;
+    if (totalRecords < 100) return;
+
+    const lastBackup = localStorage.getItem('ruthirsty_last_backup');
+    const now = Date.now();
+    const thirtyDays = 30 * 24 * 60 * 60 * 1000;
+
+    if (!lastBackup || (now - parseInt(lastBackup)) > thirtyDays) {
+        setTimeout(() => {
+            const shouldBackup = confirm(
+                `您已有 ${totalRecords} 条打卡记录！\n\n为了数据安全，建议定期导出备份。\n\n是否现在导出数据？`
+            );
+            if (shouldBackup) {
+                exportData();
+                localStorage.setItem('ruthirsty_last_backup', now.toString());
+            }
+        }, 2000);
+    }
+}
+
+// 打开帮助模态框
+function openHelpModal() {
+    document.getElementById('helpModal').classList.add('show');
+}
+
+// 关闭帮助模态框
+function closeHelpModal() {
+    document.getElementById('helpModal').classList.remove('show');
 }
 
 // 将deleteRecord函数暴露到全局作用域，以便HTML onclick可以调用

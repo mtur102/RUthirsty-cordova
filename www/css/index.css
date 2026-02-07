@@ -42,8 +42,27 @@ body {
 .header h1 {
     font-size: 28px;
     font-weight: 600;
-    margin: 0;
+    margin: 0 0 8px 0;
     text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.daily-tip {
+    font-size: 14px;
+    margin: 0;
+    opacity: 0.9;
+    font-weight: 400;
+    animation: tipFadeIn 1s ease;
+}
+
+@keyframes tipFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 0.9;
+        transform: translateY(0);
+    }
 }
 
 /* 目标和进度区域 */
@@ -748,4 +767,87 @@ body {
     .export-btn {
         max-width: 100%;
     }
+}
+
+/* 页脚 */
+.footer {
+    text-align: center;
+    padding: 20px 0;
+    color: white;
+    opacity: 0.8;
+    font-size: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+}
+
+.help-link {
+    background: none;
+    border: none;
+    color: white;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px 8px;
+    transition: opacity 0.3s ease;
+}
+
+.help-link:hover {
+    opacity: 1;
+}
+
+.version {
+    font-size: 12px;
+    opacity: 0.6;
+}
+
+/* 帮助内容 */
+.help-content {
+    line-height: 1.6;
+}
+
+.help-content h4 {
+    margin: 20px 0 12px 0;
+    color: #667eea;
+    font-size: 16px;
+}
+
+.help-content h4:first-child {
+    margin-top: 0;
+}
+
+.help-content ul {
+    margin: 0 0 16px 0;
+    padding-left: 24px;
+}
+
+.help-content li {
+    margin-bottom: 8px;
+    color: #666;
+}
+
+.help-content kbd {
+    display: inline-block;
+    padding: 2px 8px;
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 12px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.help-content p {
+    margin: 8px 0;
+    color: #666;
+}
+
+.help-content a {
+    color: #667eea;
+    text-decoration: none;
+}
+
+.help-content a:hover {
+    text-decoration: underline;
 }

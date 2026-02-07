@@ -15,6 +15,7 @@
             <!-- 头部 -->
             <header class="header">
                 <h1>RUthirsty 喝水打卡</h1>
+                <p class="daily-tip" id="dailyTip">💧 每天8杯水，健康好身体</p>
             </header>
 
             <!-- 目标和进度区域 -->
@@ -77,6 +78,69 @@
                 <button id="historyBtn" class="history-btn">查看历史记录</button>
                 <button id="exportBtn" class="export-btn">导出数据</button>
             </section>
+
+            <!-- 页脚 -->
+            <footer class="footer">
+                <button id="helpBtn" class="help-link">使用帮助</button>
+                <span class="version">v1.2.0</span>
+            </footer>
+        </div>
+
+        <!-- 帮助模态框 -->
+        <div id="helpModal" class="modal">
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <h3>使用帮助</h3>
+                    <button id="closeHelp" class="close-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="help-content">
+                        <h4>⌨️ 键盘快捷键</h4>
+                        <ul>
+                            <li><kbd>空格</kbd> - 快速打卡</li>
+                            <li><kbd>ESC</kbd> - 关闭弹窗</li>
+                        </ul>
+
+                        <h4>💡 使用技巧</h4>
+                        <ul>
+                            <li>使用快速打卡按钮（+2/+3/+5）补录遗漏的记录</li>
+                            <li>进度条颜色会根据完成度自动变化</li>
+                            <li>达到每日目标时会显示祝贺动画</li>
+                            <li>定期导出数据以防数据丢失</li>
+                        </ul>
+
+                        <h4>🎨 进度条颜色</h4>
+                        <ul>
+                            <li>🔘 灰色 - 完成度 &lt; 50%</li>
+                            <li>🔵 蓝色 - 完成度 50-75%</li>
+                            <li>🟣 紫色 - 完成度 75-100%</li>
+                            <li>🟢 绿色 - 已完成 100%</li>
+                        </ul>
+
+                        <h4>📊 统计说明</h4>
+                        <ul>
+                            <li><strong>总打卡次数</strong> - 所有时间的打卡总数</li>
+                            <li><strong>连续打卡天数</strong> - 从今天往前连续打卡的天数</li>
+                            <li><strong>累计打卡天数</strong> - 有打卡记录的总天数</li>
+                        </ul>
+
+                        <h4>💾 数据管理</h4>
+                        <ul>
+                            <li>数据保存在浏览器本地存储中</li>
+                            <li>清除浏览器数据会导致记录丢失</li>
+                            <li>建议定期导出CSV备份</li>
+                            <li>记录超过100条时会自动提醒备份</li>
+                        </ul>
+
+                        <h4>🔗 项目信息</h4>
+                        <p>RUthirsty 是一个开源的喝水打卡应用</p>
+                        <p>GitHub: <a href="https://github.com/mtur102/RUthirsty-cordova" target="_blank">mtur102/RUthirsty-cordova</a></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="closeHelpBtn" class="btn-primary">知道了</button>
+                </div>
+            </div>
         </div>
 
         <!-- 目标设置模态框 -->
