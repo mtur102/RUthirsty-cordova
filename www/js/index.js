@@ -38,6 +38,11 @@ function bindEvents() {
     // 打卡按钮
     document.getElementById('checkinBtn').addEventListener('click', addRecord);
 
+    // 快速打卡按钮
+    document.getElementById('quickAdd2').addEventListener('click', () => quickAddRecords(2));
+    document.getElementById('quickAdd3').addEventListener('click', () => quickAddRecords(3));
+    document.getElementById('quickAdd5').addEventListener('click', () => quickAddRecords(5));
+
     // 设置按钮
     document.getElementById('settingsBtn').addEventListener('click', openSettingsModal);
     document.getElementById('closeSettings').addEventListener('click', closeSettingsModal);
@@ -51,6 +56,9 @@ function bindEvents() {
 
     // 导出数据按钮
     document.getElementById('exportBtn').addEventListener('click', exportData);
+
+    // 清空所有数据按钮
+    document.getElementById('clearAllData').addEventListener('click', clearAllData);
 
     // 点击模态框背景关闭
     document.getElementById('settingsModal').addEventListener('click', function(e) {
@@ -142,6 +150,33 @@ function addRecord() {
     checkGoalCompletion();
 }
 
+// 快速添加多条记录
+function quickAddRecords(count) {
+    const confirmed = confirm(`确定要一次性添加 ${count} 条打卡记录吗？`);
+    if (!confirmed) return;
+
+    const now = new Date();
+    const baseTime = now.getTime();
+
+    for (let i = 0; i < count; i++) {
+        const record = {
+            id: (baseTime + i) + '_' + Math.random().toString(36).substring(2, 11),
+            timestamp: baseTime + i * 1000, // 每条记录间隔1秒
+            date: getTodayDateString()
+        };
+        appData.records.push(record);
+    }
+
+    saveData();
+    updateUI();
+
+    // 显示提示
+    showToast(`✓ 已添加 ${count} 条记录`, 'success');
+
+    // 检查是否完成目标
+    checkGoalCompletion();
+}
+
 // 检查目标完成情况
 function checkGoalCompletion() {
     const todayRecords = getTodayRecords();
@@ -215,7 +250,19 @@ function updateStats() {
     document.getElementById('progressPercent').textContent = percent;
 
     // 更新进度条
-    document.getElementById('progressFill').style.width = percent + '%';
+    const progressFill = document.getElementById('progressFill');
+    progressFill.style.width = percent + '%';
+
+    // 根据完成度改变进度条颜色
+    if (percent >= 100) {
+        progressFill.style.background = 'linear-gradient(90deg, #10b981 0%, #059669 100%)';
+    } else if (percent >= 75) {
+        progressFill.style.background = 'linear-gradient(90deg, #667eea 0%, #764ba2 100%)';
+    } else if (percent >= 50) {
+        progressFill.style.background = 'linear-gradient(90deg, #3b82f6 0%, #2563eb 100%)';
+    } else {
+        progressFill.style.background = 'linear-gradient(90deg, #94a3b8 0%, #64748b 100%)';
+    }
 }
 
 // 渲染今日记录列表
@@ -452,6 +499,48 @@ function showExportSuccess() {
     const toast = document.createElement('div');
     toast.className = 'toast-message';
     toast.textContent = '✓ 数据导出成功';
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('fade-out');
+        setTimeout(() => {
+            document.body.removeChild(toast);
+        }, 300);
+    }, 2000);
+}
+
+// 清空所有数据
+function clearAllData() {
+    const confirmed = confirm('确定要清空所有数据吗？\n\n此操作将删除所有打卡记录，且无法恢复！\n\n建议先导出数据备份。');
+
+    if (!confirmed) return;
+
+    // 二次确认
+    const doubleConfirm = confirm('最后确认：真的要删除所有数据吗？');
+
+    if (!doubleConfirm) return;
+
+    // 清空数据
+    appData.records = [];
+    appData.settings.dailyGoal = 8;
+    saveData();
+
+    // 关闭设置模态框
+    closeSettingsModal();
+
+    // 更新UI
+    updateUI();
+
+    // 显示提示
+    showToast('所有数据已清空', 'warning');
+}
+
+// 通用Toast提示
+function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `toast-message toast-${type}`;
+    toast.textContent = message;
 
     document.body.appendChild(toast);
 

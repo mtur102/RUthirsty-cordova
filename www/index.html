@@ -37,6 +37,11 @@
                     <span class="water-icon">💧</span>
                     <span class="btn-text">打卡喝水</span>
                 </button>
+                <div class="quick-actions">
+                    <button id="quickAdd2" class="quick-btn" title="快速添加2次">+2</button>
+                    <button id="quickAdd3" class="quick-btn" title="快速添加3次">+3</button>
+                    <button id="quickAdd5" class="quick-btn" title="快速添加5次">+5</button>
+                </div>
             </section>
 
             <!-- 今日记录 -->
@@ -84,6 +89,12 @@
                 <div class="modal-body">
                     <label for="goalInput">每日喝水目标（杯）:</label>
                     <input type="number" id="goalInput" min="1" max="20" value="8">
+
+                    <div class="danger-zone">
+                        <h4>危险操作</h4>
+                        <p>清空所有数据将无法恢复</p>
+                        <button id="clearAllData" class="btn-danger">清空所有数据</button>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button id="cancelGoal" class="btn-secondary">取消</button>

@@ -134,6 +134,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: 8px;
+    margin: 0 auto 16px auto;
 }
 
 .checkin-btn:active {
@@ -148,6 +149,33 @@ body {
 
 .btn-text {
     font-size: 18px;
+}
+
+/* 快速操作按钮 */
+.quick-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+.quick-btn {
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 50px;
+}
+
+.quick-btn:active {
+    transform: scale(0.95);
+    background: #667eea;
+    color: white;
 }
 
 /* 今日记录 */
@@ -423,6 +451,45 @@ body {
     background: #e0e0e0;
 }
 
+/* 危险区域 */
+.danger-zone {
+    margin-top: 24px;
+    padding: 16px;
+    background: #fff5f5;
+    border: 2px solid #fee;
+    border-radius: 8px;
+}
+
+.danger-zone h4 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    color: #dc2626;
+}
+
+.danger-zone p {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.btn-danger {
+    width: 100%;
+    padding: 10px;
+    background: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-danger:active {
+    transform: scale(0.95);
+    background: #b91c1c;
+}
+
 /* 历史记录列表 */
 .history-list {
     max-height: 50vh;
@@ -619,6 +686,14 @@ body {
     z-index: 2000;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     animation: toastSlideUp 0.3s ease;
+}
+
+.toast-warning {
+    background: rgba(245, 158, 11, 0.95);
+}
+
+.toast-error {
+    background: rgba(239, 68, 68, 0.95);
 }
 
 .toast-message.fade-out {
